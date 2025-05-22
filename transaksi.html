@@ -1,4 +1,6 @@
-<!-- transaksi.html --><!DOCTYPE html><html lang="id">
+<!-- transaksi.html -->
+<!DOCTYPE html>
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -6,13 +8,22 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white min-h-screen p-4">
-  <h1 class="text-2xl font-bold mb-4">Transaksi</h1>  <!-- Form input manual -->  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+  <h1 class="text-2xl font-bold mb-4">Transaksi</h1>
+
+  <!-- Form input manual -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
     <input type="text" id="namaProduk" placeholder="Nama Produk" class="p-2 border rounded">
     <input type="number" id="jumlahProduk" placeholder="Jumlah" class="p-2 border rounded">
     <input type="number" id="hargaProduk" placeholder="Harga" class="p-2 border rounded">
     <button onclick="tambahKeranjang()" class="bg-blue-600 text-white p-2 rounded">Tambah ke Keranjang</button>
-  </div>  <!-- Daftar keranjang -->  <h2 class="text-xl font-semibold mb-2">Keranjang</h2>
-  <div id="keranjangList" class="mb-4"></div><button onclick="konfirmasiTransaksi()" class="bg-green-600 text-white px-4 py-2 rounded">Konfirmasi Transaksi</button>
+  </div>
+
+  <!-- Daftar keranjang -->
+  <h2 class="text-xl font-semibold mb-2">Keranjang</h2>
+  <div id="keranjangList" class="mb-2"></div>
+  <div id="totalHarga" class="text-lg font-bold mb-4"></div>
+
+  <button onclick="konfirmasiTransaksi()" class="bg-green-600 text-white px-4 py-2 rounded">Konfirmasi Transaksi</button>
 
   <script>
     const keranjang = [];
@@ -32,13 +43,17 @@
 
     function updateKeranjang() {
       const list = document.getElementById('keranjangList');
+      const totalHargaEl = document.getElementById('totalHarga');
       list.innerHTML = '';
+      let totalSemua = 0;
       keranjang.forEach((item, i) => {
         const div = document.createElement('div');
         div.className = 'flex justify-between p-2 border-b';
         div.innerHTML = `<span>${item.nama} (${item.jumlah} x ${item.harga})</span><span>Rp ${item.total}</span>`;
         list.appendChild(div);
+        totalSemua += item.total;
       });
+      totalHargaEl.textContent = `Total: Rp ${totalSemua}`;
     }
 
     function konfirmasiTransaksi() {
@@ -53,8 +68,10 @@
       updateKeranjang();
       alert('Transaksi berhasil disimpan.');
     }
-  </script></body>
-<!-- Floating Kalkulator Universal --><div id="floatingCalc">
+  </script>
+
+<!-- Floating Kalkulator Universal -->
+<div id="floatingCalc">
   <div id="calcHeader">
     <span>Kalkulator</span>
     <button id="btnMinimize">−</button>
@@ -80,7 +97,9 @@
     <button id="undo" colspan="4">Undo</button>
   </div>
 </div>
-<div id="calcMinimized">Kalkulator</div><style>
+<div id="calcMinimized">Kalkulator</div>
+
+<style>
   #floatingCalc {
     position: fixed;
     left: 20px;
@@ -152,7 +171,9 @@
     user-select: none;
     z-index: 9999;
   }
-</style><script>
+</style>
+
+<script>
   (function(){
   const calc = document.getElementById('floatingCalc');
   const display = document.getElementById('calcDisplay');
@@ -182,9 +203,7 @@
   }
 
   function startDrag(e) {
-    // Cek kalau klik target adalah tombol di header, batal drag
     if (e.target.closest('button')) return;
-
     e.preventDefault();
     const { x, y } = getClientCoords(e);
     isDragging = true;
@@ -200,7 +219,6 @@
     const newX = x - offsetX;
     const newY = y - offsetY;
 
-    // Batasi agar kalkulator tidak keluar layar (opsional)
     const maxX = window.innerWidth - calc.offsetWidth;
     const maxY = window.innerHeight - calc.offsetHeight;
     calc.style.left = `${Math.min(Math.max(0, newX), maxX)}px`;
@@ -216,7 +234,6 @@
     header.style.cursor = 'grab';
   }
 
-  // Pasang event listener drag di header (mouse + touch)
   header.addEventListener('mousedown', startDrag);
   header.addEventListener('touchstart', startDrag, { passive: false });
 
@@ -226,9 +243,8 @@
   document.addEventListener('mouseup', endDrag);
   document.addEventListener('touchend', endDrag);
 
-  // Minimize / Maximize tombol
   btnMinimize.onclick = (e) => {
-    e.stopPropagation(); // supaya tidak ikut triggering drag
+    e.stopPropagation();
     calc.style.display = 'none';
     calcMinimized.style.display = 'block';
   };
@@ -237,7 +253,6 @@
     calcMinimized.style.display = 'none';
   };
 
-  // Tombol kalkulator
   document.querySelectorAll('#calcButtons button').forEach(btn => {
     btn.addEventListener('click', () => {
       const val = btn.textContent;
@@ -277,4 +292,5 @@
   });
 })();
 </script>
+</body>
 </html>
